@@ -63,6 +63,9 @@ for low traffic services (say, less than 100 req/s), and is best used coupled
 with a thread pool such as [Moonpool](https://github.com/c-cube/moonpool/)
 to improve efficiency.
 
+<details>
+<summary>detailed example</summary>
+
 See 'examples/twirp_tiny_httpd/' for an example:
 
 ```ocaml
@@ -107,6 +110,8 @@ any service: a set of endpoints). We can then create a [Tiny_httpd.Server.t]
 This will add new routes (e.g. "/twirp/foo.bar.Calculator/add")
 and call the functions we defined above to serve these routes.
 
+</details>
+
 ## Using ezcurl as a client
 
 The library `twirp_ezcurl` uses [Ezcurl](https://github.com/c-cube/ezcurl)
@@ -116,6 +121,8 @@ Curl is very widely available and is a robust HTTP client; ezcurl adds a
 simple OCaml API on top.
 Twirp_ezcurl is best used for low-traffic querying of services.
 
+<details>
+<summary>full example</summary>
 Example (as in 'examples/twirp_ezcurl/') that computes `31 + 100`
 remotely:
 
@@ -147,4 +154,6 @@ endpoint (code-generated from a `.proto` file), and an argument, and performs
 a HTTP query.
 The user can provide an already existing Curl client to reuse, turn TLS off or on,
 and pick the wire format (JSON or binary protobuf).
+
+</details>
 
