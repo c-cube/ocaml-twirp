@@ -1,0 +1,23 @@
+
+(library
+  (name calculator)
+  (modules calculator)
+  (libraries pbrt pbrt_yojson pbrt_services))
+
+(rule
+ (targets calculator.ml calculator.mli)
+ (deps calculator.proto)
+ (action
+  (run ocaml-protoc --binary --pp --yojson --services --ml_out ./ %{deps})))
+
+(executable
+  (name client)
+  (modules client)
+  (flags :standard -w -40)
+  (libraries ezcurl twirp_ezcurl calculator moonpool unix multicore-magic))
+
+(executable
+  (name server)
+  (modules server)
+  (flags :standard -w -44)
+  (libraries twirp_tiny_httpd tiny_httpd calculator moonpool))
