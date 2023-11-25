@@ -112,7 +112,7 @@ and call the functions we defined above to serve these routes.
 
 </details>
 
-## Using ezcurl as a client
+### Using ezcurl as a client
 
 The library `twirp_ezcurl` uses [Ezcurl](https://github.com/c-cube/ezcurl)
 as a [Curl](https://curl.haxx.se/) wrapper to provide Twirp clients.
