@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-message DivByZero {}
-
 message I32 {
   int32 value = 0;
 }

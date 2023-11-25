@@ -4,6 +4,7 @@ open Pbrt_services
 type error = Twirp_error.error
 
 val pp_error : Format.formatter -> error -> unit
+val show_error : error -> string
 
 val call :
   ?client:Ezcurl.t ->

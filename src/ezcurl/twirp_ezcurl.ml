@@ -6,6 +6,7 @@ let spf = Printf.sprintf
 type error = Twirp_error.error
 
 let pp_error = Twirp_error.pp_error
+let show_error e = Format.asprintf "%a" pp_error e
 
 let decode_error exn : error =
   {

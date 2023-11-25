@@ -16,31 +16,26 @@ as an example:
 ```proto
 syntax = "proto3";
 
-message DivByZero {}
-
+// single int
 message I32 {
   int32 value = 0;
 }
 
+// add two numbers
 message AddReq {
   int32 a = 1;
   int32 b = 2;
 }
 
+// add an array of numbers
 message AddAllReq {
   repeated int32 ints = 1;
 }
-
-message Empty {}
 
 service Calculator {
   rpc add(AddReq) returns (I32);
 
   rpc add_all(AddAllReq) returns (I32);
-
-  rpc ping(Empty) returns (Empty);
-
-  rpc get_pings(Empty) returns (I32);
 }
 ```
 
@@ -55,7 +50,18 @@ of .ml and .mli files:
   (run ocaml-protoc --binary --pp --yojson --services --ml_out ./ %{deps})))
 ```
 
-### using Tiny_httpd as a server
+### Using Tiny_httpd as a server
+
+The library `twirp_tiny_httpd` uses [Tiny_httpd](https://github.com/c-cube/tiny_httpd)
+as a HTTP server to host services over HTTP 1.1.
+
+Tiny_httpd is a convenient little HTTP server with no dependencies
+that uses direct style control flow
+and system threads, rather than an event loop.
+Realistically, it is sufficient
+for low traffic services (say, less than 100 req/s), and is best used coupled
+with a thread pool such as [Moonpool](https://github.com/c-cube/moonpool/)
+to improve efficiency.
 
 See 'examples/twirp_tiny_httpd/' for an example:
 
@@ -72,10 +78,6 @@ module Service_impl = struct
     let l = ref 0l in
     List.iter (fun x -> l := Int32.add !l x) a.ints;
     default_i32 ~value:!l ()
-
-  let n_pings = ref 0
-  let ping () = incr n_pings
-  let get_pings () : i32 = default_i32 ~value:(Int32.of_int !n_pings) ()
 end
 
 (* instantiate the code-generated [Calculator] service
@@ -84,9 +86,6 @@ let calc_service : Twirp_tiny_httpd.handler Pbrt_services.Server.t =
   Calculator.make_server
     ~add:(fun rpc -> Twirp_tiny_httpd.mk_handler rpc Service_impl.add)
     ~add_all:(fun rpc -> Twirp_tiny_httpd.mk_handler rpc Service_impl.add_all)
-    ~ping:(fun rpc -> Twirp_tiny_httpd.mk_handler rpc Service_impl.ping)
-    ~get_pings:(fun rpc ->
-      Twirp_tiny_httpd.mk_handler rpc Service_impl.get_pings)
     ()
 
 let () =
@@ -107,4 +106,45 @@ any service: a set of endpoints). We can then create a [Tiny_httpd.Server.t]
 (a web server) and register the service (or multiple services) in it.
 This will add new routes (e.g. "/twirp/foo.bar.Calculator/add")
 and call the functions we defined above to serve these routes.
+
+## Using ezcurl as a client
+
+The library `twirp_ezcurl` uses [Ezcurl](https://github.com/c-cube/ezcurl)
+as a [Curl](https://curl.haxx.se/) wrapper to provide Twirp clients.
+
+Curl is very widely available and is a robust HTTP client; ezcurl adds a
+simple OCaml API on top.
+Twirp_ezcurl is best used for low-traffic querying of services.
+
+Example (as in 'examples/twirp_ezcurl/') that computes `31 + 100`
+remotely:
+
+```ocaml
+let spf = Printf.sprintf
+
+let () =
+  let port = try int_of_string (Sys.getenv "PORT") with _ -> 8080 in
+  Printf.printf "query on http://localhost:%d/\n%!" port;
+
+  let r =
+    match
+      (* call [Calculator.add] with arguments [{a=31; b=100}] *)
+      Twirp_ezcurl.call ~use_tls:false ~host:"localhost" ~port
+        Calculator.Calculator.add
+      @@ Calculator.default_add_req ~a:31l ~b:100l ()
+    with
+    | Ok x -> x.value |> Int32.to_int
+    | Error err ->
+      failwith (spf "call to add failed: %s" @@ Twirp_ezcurl.show_error err)
+  in
+
+  Printf.printf "add call: returned %d\n%!" r;
+  ()
+```
+
+The main function is `Twirp_ezcurl.call`, which takes a remote host, port, service
+endpoint (code-generated from a `.proto` file), and an argument, and performs
+a HTTP query.
+The user can provide an already existing Curl client to reuse, turn TLS off or on,
+and pick the wire format (JSON or binary protobuf).
 
