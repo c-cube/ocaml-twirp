@@ -68,8 +68,7 @@ let call ?(client : Ezcurl.t = Ezcurl.make ())
       qualified_service_path_component rpc.rpc_name
   in
 
-  Printf.printf "url: %S\n" url;
-
+  (* Printf.printf "url: %S\n" url; *)
   let headers = [ "content-type", content_type ] in
 
   let res : _ result =
