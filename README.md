@@ -83,7 +83,7 @@ end
 (* instantiate the code-generated [Calculator] service
   to turn it into a [Pbrt_services.Server.t] abstract service. *)
 let calc_service : Twirp_tiny_httpd.handler Pbrt_services.Server.t =
-  Calculator.make_server
+  Calculator.Server.make
     ~add:(fun rpc -> Twirp_tiny_httpd.mk_handler rpc Service_impl.add)
     ~add_all:(fun rpc -> Twirp_tiny_httpd.mk_handler rpc Service_impl.add_all)
     ()
@@ -130,7 +130,7 @@ let () =
     match
       (* call [Calculator.add] with arguments [{a=31; b=100}] *)
       Twirp_ezcurl.call ~use_tls:false ~host:"localhost" ~port
-        Calculator.Calculator.add
+        Calculator.Calculator.Client.add
       @@ Calculator.default_add_req ~a:31l ~b:100l ()
     with
     | Ok x -> x.value |> Int32.to_int

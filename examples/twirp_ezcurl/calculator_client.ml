@@ -8,7 +8,7 @@ let () =
   let r =
     match
       Twirp_ezcurl.call ~use_tls:false ~host:"localhost" ~port
-        Calculator.Calculator.add
+        Calculator.Calculator.Client.add
       @@ Calculator.default_add_req ~a:31l ~b:100l ()
     with
     | Ok x -> x.value |> Int32.to_int

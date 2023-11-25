@@ -15,7 +15,7 @@ module Service_impl = struct
 end
 
 let calc_service : Twirp_tiny_httpd.handler Pbrt_services.Server.t =
-  Calculator.make_server
+  Calculator.Server.make
     ~add:(fun rpc -> Twirp_tiny_httpd.mk_handler rpc Service_impl.add)
     ~add_all:(fun rpc -> Twirp_tiny_httpd.mk_handler rpc Service_impl.add_all)
     ~ping:(fun rpc -> Twirp_tiny_httpd.mk_handler rpc Service_impl.ping)
