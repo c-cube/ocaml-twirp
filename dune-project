@@ -11,17 +11,27 @@
 
 ;(documentation https://url/to/documentation)
 
+(package
+ (name twirp_core)
+ (synopsis "Twirp core library")
+ (depends
+  (ocaml (>= 4.08))
+  dune
+  pbrt
+  pbrt-yojson
+  pbrt-services
+  (odoc :with-doc))
+ (tags
+  (twirp protobuf client rpc curl)))
 
 (package
  (name twirp_ezcurl)
  (synopsis "Twirp client using Ezcurl")
  (depends
   (ocaml (>= 4.08))
+  (twirp_core (= :version))
   dune
   ezcurl
-  pbrt
-  pbrt-yojson
-  pbrt-services
   (odoc :with-doc))
  (tags
   (twirp protobuf client rpc curl)))
@@ -31,11 +41,9 @@
  (synopsis "Host Twirp services using Tiny_httpd")
  (depends
   (ocaml (>= 4.08))
+  (twirp_core (= :version))
   dune
   tiny_httpd
-  pbrt
-  pbrt-yojson
-  pbrt-services
   (odoc :with-doc))
  (tags
   (twirp protobuf services rpc)))

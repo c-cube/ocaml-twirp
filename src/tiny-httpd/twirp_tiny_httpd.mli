@@ -2,8 +2,8 @@
 
     This implements the server end of https://github.com/twitchtv/twirp *)
 
-module Twirp_error = Twirp_error
-module Error_codes = Error_codes
+module Error = Twirp_core.Error
+module Error_codes = Twirp_core.Error_codes
 
 val fail : ?msg:string -> Error_codes.t -> 'a
 val failf : Error_codes.t -> ('a, Format.formatter, unit, 'b) format4 -> 'a

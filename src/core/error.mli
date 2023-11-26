@@ -1,7 +1,7 @@
 
-(** Code for twirp_error.proto *)
+(** Code for error.proto *)
 
-(* generated from "twirp_error.proto", do not edit *)
+(* generated from "error.proto", do not edit *)
 
 
 

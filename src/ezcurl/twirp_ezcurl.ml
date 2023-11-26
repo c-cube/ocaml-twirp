@@ -1,22 +1,22 @@
 open Pbrt_services
-module Twirp_error = Twirp_error
+module Error = Twirp_core.Error
 
 let spf = Printf.sprintf
 
-type error = Twirp_error.error
+type error = Error.error
 
-let pp_error = Twirp_error.pp_error
+let pp_error = Error.pp_error
 let show_error e = Format.asprintf "%a" pp_error e
 
 let decode_error exn : error =
   {
-    Twirp_error.code = "decoding error";
+    Error.code = "decoding error";
     msg = spf "decoding response failed with: %s" (Printexc.to_string exn);
   }
 
 let unknown_error msg : error =
   {
-    Twirp_error.code = "unknown";
+    Error.code = "unknown";
     msg = spf "call failed with unknown reason: %s" msg;
   }
 
@@ -86,7 +86,7 @@ let call ?(client : Ezcurl.t = Ezcurl.make ())
     | res -> Ok res
     | exception exn -> Error (decode_error exn))
   | Ok { body; headers = _; _ } ->
-    (match Twirp_error.decode_json_error @@ Yojson.Basic.from_string body with
+    (match Error.decode_json_error @@ Yojson.Basic.from_string body with
     | err -> Error err
     | exception exn -> Error (decode_error exn))
   | Error _ -> Error (unknown_error "http call failed")

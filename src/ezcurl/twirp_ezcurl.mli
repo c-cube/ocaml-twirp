@@ -1,7 +1,7 @@
-module Twirp_error = Twirp_error
+module Error = Twirp_core.Error
 open Pbrt_services
 
-type error = Twirp_error.error
+type error = Error.error
 
 val pp_error : Format.formatter -> error -> unit
 val show_error : error -> string

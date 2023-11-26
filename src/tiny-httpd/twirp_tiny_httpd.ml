@@ -1,7 +1,7 @@
 module H = Tiny_httpd
 module PB_server = Pbrt_services.Server
-module Twirp_error = Twirp_error
-module Error_codes = Error_codes
+module Error = Twirp_core.Error
+module Error_codes = Twirp_core.Error_codes
 
 let spf = Printf.sprintf
 
@@ -32,9 +32,9 @@ let return_error (err : Error_codes.t) (msg : string option) : H.Response.t =
     | None -> Error_codes.to_descr err
   in
   let code, http_code = Error_codes.to_msg_and_code err in
-  let err = Twirp_error.default_error ~code ~msg () in
+  let err = Error.default_error ~code ~msg () in
   let json_body : string =
-    Twirp_error.encode_json_error err |> Yojson.Basic.to_string
+    Error.encode_json_error err |> Yojson.Basic.to_string
   in
   H.Response.make_raw
     ~headers:[ "content-type", "application/json" ]
