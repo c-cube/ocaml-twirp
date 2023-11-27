@@ -4,6 +4,8 @@ This is an OCaml implementation of [Twirp](https://twitchtv.github.io/twirp/)
 that relies on [ocaml-protoc](https://github.com/mransan/ocaml-protoc/) to
 compile protobuf IDL files.
 
+**NOTE**: this relies on unreleased changes to ocaml-protoc, currently on master. The whole twirp library will have to wait for ocaml-protoc 3.0 to be released to be released itself.
+
 ## License
 
 MIT license
