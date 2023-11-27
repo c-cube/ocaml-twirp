@@ -97,15 +97,23 @@ let handle_rpc (rpc : handler) (req : string H.Request.t) : H.Response.t =
     in
 
     (* serialize result *)
-    let res =
-      match content_type with
-      | `JSON -> Yojson.Basic.to_string @@ encode_json_res res
-      | `BINARY ->
-        let enc = Pbrt.Encoder.create () in
-        encode_pb_res res enc;
-        Pbrt.Encoder.to_string enc
-    in
-    H.Response.make_string @@ Ok res
+    match content_type with
+    | `JSON ->
+      let res = Yojson.Basic.to_string @@ encode_json_res res in
+      H.Response.make_string @@ Ok res
+    | `BINARY ->
+      (* TODO: it would be good to be able to reuse the encoder,
+         e.g. with a pool of encoders *)
+      let enc = Pbrt.Encoder.create () in
+      encode_pb_res res enc;
+
+      (* write the encoder's content directly into the output *)
+      let write out =
+        Pbrt.Encoder.write_chunks
+          (fun buf i len -> H.IO.Output.output out buf i len)
+          enc
+      in
+      H.Response.make_writer @@ Ok (H.IO.Writer.make ~write ())
   with
   | Fail (err, msg) -> return_error err msg
   | exn ->
