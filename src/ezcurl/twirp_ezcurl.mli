@@ -1,16 +1,12 @@
-module Error = Twirp_core.Error
 open Pbrt_services
-
-type error = Error.error
-
-val pp_error : Format.formatter -> error -> unit
-val show_error : error -> string
+include module type of Twirp_core.Client.Common
 
 val call :
   ?client:Ezcurl.t ->
   ?encoding:[ `JSON | `BINARY ] ->
   ?prefix:string option ->
   ?use_tls:bool ->
+  ?headers:headers ->
   host:string ->
   port:int ->
   ('req, Value_mode.unary, 'res, Value_mode.unary) Client.rpc ->
