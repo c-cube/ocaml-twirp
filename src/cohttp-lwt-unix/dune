@@ -1,0 +1,8 @@
+
+(library
+ (name twirp_cohttp_lwt_unix)
+ (public_name twirp_cohttp_lwt_unix)
+ (synopsis "Twirp client using cohttp-lwt-unix")
+ (wrapped true)
+ (libraries twirp_core yojson pbrt_services cohttp cohttp-lwt-unix lwt))
+

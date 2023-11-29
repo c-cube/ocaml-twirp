@@ -37,6 +37,19 @@
   (twirp protobuf client rpc curl)))
 
 (package
+ (name twirp_cohttp_lwt_unix)
+ (synopsis "Twirp client using cohttp-lwt-unix")
+ (depends
+  (ocaml (>= 4.08))
+  (twirp_core (= :version))
+  dune
+  (cohttp-lwt-unix (>= 5.0))
+  lwt
+  (odoc :with-doc))
+ (tags
+  (twirp protobuf client rpc curl)))
+
+(package
  (name twirp_tiny_httpd)
  (synopsis "Host Twirp services using Tiny_httpd")
  (depends
