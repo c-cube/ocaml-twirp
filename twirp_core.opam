@@ -11,9 +11,10 @@ bug-reports: "https://github.com/c-cube/ocaml-twirp/issues"
 depends: [
   "ocaml" {>= "4.08"}
   "dune" {>= "2.9"}
-  "pbrt"
-  "pbrt-yojson"
-  "pbrt-services"
+  "ocaml-protoc" {>= "3.0" & with-dev}
+  "pbrt" {>= "3.0"}
+  "pbrt-yojson" {>= "3.0"}
+  "pbrt-services" {>= "3.0"}
   "odoc" {with-doc}
 ]
 build: [

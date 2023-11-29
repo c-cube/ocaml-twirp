@@ -17,9 +17,10 @@
  (depends
   (ocaml (>= 4.08))
   dune
-  pbrt
-  pbrt-yojson
-  pbrt-services
+  (ocaml-protoc (and (>= 3.0) :with-dev))
+  (pbrt (>= 3.0))
+  (pbrt-yojson (>= 3.0))
+  (pbrt-services (>= 3.0))
   (odoc :with-doc))
  (tags
   (twirp protobuf client rpc curl)))
