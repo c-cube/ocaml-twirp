@@ -33,6 +33,6 @@ jobs:
           allow-prerelease-opam: true
 
       - run: opam install . -t --deps-only
-      - run: opam exec -- dune build @install
-      - run: opam exec -- dune runtest
+      - run: opam exec -- dune build @install --ignore-promoted-rules
+      - run: opam exec -- dune runtest --ignore-promoted-rules
 
