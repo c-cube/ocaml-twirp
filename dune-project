@@ -19,8 +19,8 @@
   dune
   (ocaml-protoc (and (>= 3.0) :with-dev))
   (pbrt (>= 3.0))
-  (pbrt-yojson (>= 3.0))
-  (pbrt-services (>= 3.0))
+  (pbrt_yojson (>= 3.0))
+  (pbrt_services (>= 3.0))
   (odoc :with-doc))
  (tags
   (twirp protobuf client rpc curl)))
