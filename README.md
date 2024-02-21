@@ -1,5 +1,7 @@
 # Twirp
 
+[![Build and Test](https://github.com/c-cube/ocaml-twirp/actions/workflows/main.yml/badge.svg)](https://github.com/c-cube/ocaml-twirp/actions/workflows/main.yml)
+
 This is an OCaml implementation of [Twirp](https://twitchtv.github.io/twirp/)
 that relies on [ocaml-protoc](https://github.com/mransan/ocaml-protoc/) to
 compile protobuf IDL files.
