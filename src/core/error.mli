@@ -39,6 +39,3 @@ val encode_json_error : error -> Yojson.Basic.t
 
 val decode_json_error : Yojson.Basic.t -> error
 (** [decode_json_error decoder] decodes a [error] value from [decoder] *)
-
-
-(** {2 Services} *)

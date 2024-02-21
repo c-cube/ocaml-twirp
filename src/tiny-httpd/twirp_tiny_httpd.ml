@@ -120,6 +120,18 @@ let handle_rpc (rpc : handler) (req : string H.Request.t) : H.Response.t =
     return_error Error_codes.Unknown
       (Some (spf "handler failed with %s" (Printexc.to_string exn)))
 
+open struct
+  let add_prefix_to_route (pre : string) (r : _ H.Route.t) : _ H.Route.t =
+    if pre = "" then
+      r
+    else (
+      let pre_fragments = String.split_on_char '/' pre in
+      List.fold_right
+        (fun fragment r -> H.Route.(exact fragment @/ r))
+        pre_fragments r
+    )
+end
+
 let add_service ?middlewares ?(prefix = Some "twirp") (server : H.t)
     (service : handler PB_server.t) : unit =
   let add_handler (Handler { rpc; _ } as handler) : unit =
@@ -138,8 +150,8 @@ let add_service ?middlewares ?(prefix = Some "twirp") (server : H.t)
     in
 
     let route =
-      H.Route.(
-        exact qualified_service_path_component @/ exact rpc.name @/ return)
+      add_prefix_to_route qualified_service_path_component
+        H.Route.(exact rpc.name @/ return)
     in
 
     let route =
