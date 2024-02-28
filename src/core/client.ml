@@ -159,12 +159,12 @@ struct
           with
           | [ (code, _, doc) ] ->
             {
-              code = Error_codes.to_descr code;
+              code = Error_codes.to_msg_and_code code |> fst;
               msg = spf "%s\nHTTP code %d, raw message: %s" doc http_code body;
             }
           | _ ->
             {
-              code = Error_codes.Malformed |> Error_codes.to_descr;
+              code = Error_codes.Malformed |> Error_codes.to_msg_and_code |> fst;
               msg = spf "Unknown error\nraw message: %s" body;
             }
         )
