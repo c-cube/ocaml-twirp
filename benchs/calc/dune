@@ -14,7 +14,7 @@
   (name client)
   (modules client)
   (flags :standard -w -40)
-  (libraries ezcurl twirp_ezcurl calculator moonpool unix multicore-magic))
+  (libraries ezcurl twirp_ezcurl calculator moonpool unix))
 
 (executable
   (name server)
