@@ -141,13 +141,35 @@ struct
         | exception exn -> Error (decode_error exn)
       in
       return res
-    | Ok (body, _, _) ->
-      let res =
-        match Error.decode_json_error @@ Yojson.Basic.from_string body with
-        | err -> Error err
-        | exception exn -> Error (decode_error exn)
+    | Ok (body, http_code, headers) ->
+      let is_json =
+        List.exists
+          (fun (k, v) ->
+            String.lowercase_ascii k = "content-type" && v = "application/json")
+          headers
       in
-      return res
+      let res =
+        if is_json then (
+          match Error.decode_json_error @@ Yojson.Basic.from_string body with
+          | err -> err
+          | exception exn -> decode_error exn
+        ) else (
+          match
+            List.find_all (fun (_, c, _) -> c = http_code) Error_codes.all
+          with
+          | [ (code, _, doc) ] ->
+            {
+              code = Error_codes.to_descr code;
+              msg = spf "%s\nHTTP code %d, raw message: %s" doc http_code body;
+            }
+          | _ ->
+            {
+              code = Error_codes.Malformed |> Error_codes.to_descr;
+              msg = spf "Unknown error\nraw message: %s" body;
+            }
+        )
+      in
+      return @@ Error res
     | Error msg ->
       return @@ Error (unknown_error @@ spf "http call failed: %s" msg)
 end

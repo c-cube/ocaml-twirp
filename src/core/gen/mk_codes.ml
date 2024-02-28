@@ -79,7 +79,8 @@ let codes =
       "The operation resulted in unrecoverable data loss or corruption." );
   ]
 
-let prelude = {|
+let prelude =
+  {|
 (** Standard error codes for Twirp.
 
   Also see https://twitchtv.github.io/twirp/docs/errors.html
@@ -120,4 +121,12 @@ let () =
   in
 
   pf "(** Get doc about this error *)\n";
-  pf "let to_descr = function\n%s\n\n" to_descr
+  pf "let to_descr = function\n%s\n\n" to_descr;
+
+  pf "let all : (t * int * string) list = [\n";
+  List.iter
+    (fun (c, code, doc) ->
+      pf "  (%s, %d, %S);\n" (String.capitalize_ascii c) code doc)
+    codes;
+  pf "]\n";
+  ()
