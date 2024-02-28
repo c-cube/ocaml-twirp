@@ -20,6 +20,7 @@ val call_exn :
   ?encoding:[ `JSON | `BINARY ] ->
   ?prefix:string option ->
   ?use_tls:bool ->
+  ?headers:headers ->
   host:string ->
   port:int ->
   ('req, Value_mode.unary, 'res, Value_mode.unary) Client.rpc ->

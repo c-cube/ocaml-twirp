@@ -24,7 +24,9 @@ let call ?(client : Ezcurl.t = Ezcurl.make ()) ?encoding ?prefix ?use_tls
 
 exception E_twirp of error
 
-let call_exn ?client ?encoding ?prefix ?use_tls ~host ~port rpc req =
-  match call ?client ?encoding ?prefix ?use_tls ~host ~port rpc req with
+let call_exn ?client ?encoding ?prefix ?use_tls ?headers ~host ~port rpc req =
+  match
+    call ?client ?encoding ?prefix ?use_tls ?headers ~host ~port rpc req
+  with
   | Ok x -> x
   | Error err -> raise (E_twirp err)
