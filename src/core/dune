@@ -3,7 +3,7 @@
  (name twirp_core)
  (public_name twirp_core)
  (wrapped true)
- (libraries pbrt pbrt_yojson yojson pbrt_services))
+ (libraries pbrt pbrt_yojson yojson logs pbrt_services))
 
 (rule
   (targets error_codes.ml)

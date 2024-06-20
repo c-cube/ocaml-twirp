@@ -2,12 +2,21 @@
 
 module Common = struct
   module Error = Error
+  module Log = (val Logs.src_log (Logs.Src.create "twirp.client"))
 
   type headers = (string * string) list
   type error = Error.error
 
   let pp_error = Error.pp_error
   let show_error e = Format.asprintf "%a" pp_error e
+
+  (** Print at most [max] bytes of [s] in ["%S"] form *)
+  let pp_truncate_str ~max out (s : string) =
+    if String.length s > max then
+      Format.fprintf out "%S[%d bytes omitted]" (String.sub s 0 max)
+        (String.length s - max)
+    else
+      Format.fprintf out "%S" s
 end
 
 open! Common
@@ -130,6 +139,9 @@ struct
 
     match res with
     | Ok (body, code, _headers) when code >= 200 && code < 300 ->
+      Log.debug (fun k ->
+          k "got success response with code=%d@ body=%a" code
+            (pp_truncate_str ~max:64) body);
       (* success *)
       let res =
         match
@@ -148,6 +160,9 @@ struct
             String.lowercase_ascii k = "content-type" && v = "application/json")
           headers
       in
+      Log.err (fun k ->
+          k "got failed response with code=%d@ body=%a" http_code
+            (pp_truncate_str ~max:64) body);
       let res =
         if is_json then (
           match Error.decode_json_error @@ Yojson.Basic.from_string body with

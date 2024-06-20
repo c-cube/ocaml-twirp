@@ -18,6 +18,7 @@
   (ocaml (>= 4.08))
   dune
   (ocaml-protoc (and (>= 3.0) :with-dev))
+  logs
   (pbrt (>= 3.0))
   (pbrt_yojson (>= 3.0))
   (pbrt_services (>= 3.0))
