@@ -12,7 +12,7 @@ depends: [
   "ocaml" {>= "4.08"}
   "twirp_core" {= version}
   "dune" {>= "2.9"}
-  "tiny_httpd"
+  "tiny_httpd" {>= "0.16"}
   "odoc" {with-doc}
 ]
 build: [
