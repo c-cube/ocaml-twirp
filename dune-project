@@ -58,7 +58,7 @@
   (ocaml (>= 4.08))
   (twirp_core (= :version))
   dune
-  tiny_httpd
+  (tiny_httpd (>= 0.16))
   (odoc :with-doc))
  (tags
   (twirp protobuf services rpc)))
