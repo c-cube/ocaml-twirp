@@ -10,7 +10,9 @@
   (action (with-stdout-to %{targets} (run gen/mk_codes.exe))))
 
 (rule
+  (alias genproto)
   (targets error.ml error.mli)
   (deps (:file error.proto))
   (mode promote)
+  (enabled_if %{env:FORCE_GENPROTO=false})
   (action (run ocaml-protoc --pp --yojson --ml_out=. %{file})))

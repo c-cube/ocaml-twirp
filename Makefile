@@ -15,6 +15,9 @@ doc:
 build-dev:
 	dune build @install @runtest $(DUNE_OPTS) --workspace=dune-workspace.dev
 
+genproto:
+	FORCE_GENPROTO=true dune build @genproto --auto-promote
+
 WATCH?= @check @runtest
 watch:
 	dune build $(DUNE_OPTS) -w $(WATCH)
