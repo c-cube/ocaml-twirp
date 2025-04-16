@@ -9,7 +9,7 @@ tags: ["twirp" "protobuf" "client" "rpc" "curl"]
 homepage: "https://github.com/c-cube/ocaml-twirp"
 bug-reports: "https://github.com/c-cube/ocaml-twirp/issues"
 depends: [
-  "ocaml" {>= "4.08"}
+  "ocaml" {>= "4.12"}
   "dune" {>= "2.9"}
   "ocaml-protoc" {>= "3.0" & with-dev-setup}
   "logs"

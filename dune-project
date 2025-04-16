@@ -15,7 +15,7 @@
  (name twirp_core)
  (synopsis "Twirp core library")
  (depends
-  (ocaml (>= 4.08))
+  (ocaml (>= 4.12))
   dune
   (ocaml-protoc (and (>= 3.0) :with-dev-setup))
   logs
@@ -30,7 +30,6 @@
  (name twirp_ezcurl)
  (synopsis "Twirp client using Ezcurl")
  (depends
-  (ocaml (>= 4.08))
   (twirp_core (= :version))
   dune
   ezcurl
@@ -42,7 +41,6 @@
  (name twirp_cohttp_lwt_unix)
  (synopsis "Twirp client using cohttp-lwt-unix")
  (depends
-  (ocaml (>= 4.08))
   (twirp_core (= :version))
   dune
   (cohttp-lwt-unix (>= 5.0))
@@ -55,7 +53,6 @@
  (name twirp_tiny_httpd)
  (synopsis "Host Twirp services using Tiny_httpd")
  (depends
-  (ocaml (>= 4.08))
   (twirp_core (= :version))
   dune
   (tiny_httpd (>= 0.16))
