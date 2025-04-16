@@ -18,7 +18,7 @@ jobs:
               #- macos-latest
               #- windows-latest
         ocaml-compiler:
-            - '4.12'
+            - '4.12.1'
             - '4.14'
             - '5.03'
 
@@ -32,6 +32,7 @@ jobs:
           dune-cache: true
           allow-prerelease-opam: true
 
+      - run: opam install mccs
       - run: opam install . -t --deps-only
       - run: opam exec -- dune build @install --ignore-promoted-rules
       - run: opam exec -- dune runtest --ignore-promoted-rules
