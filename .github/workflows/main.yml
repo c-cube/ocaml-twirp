@@ -32,7 +32,7 @@ jobs:
           dune-cache: true
           allow-prerelease-opam: true
 
-      - run: opam install mccs
+      - run: sudo apt install mccs
       - run: opam install . -t --deps-only --solver=mccs
       - run: opam exec -- dune build @install --ignore-promoted-rules
       - run: opam exec -- dune runtest --ignore-promoted-rules
