@@ -1,5 +1,9 @@
 (** Generic client module *)
 
+open struct
+  let spf = Printf.sprintf
+end
+
 module Common = struct
   module Error = Error
   module Log = (val Logs.src_log (Logs.Src.create "twirp.client"))
@@ -17,6 +21,16 @@ module Common = struct
         (String.length s - max)
     else
       Format.fprintf out "%S" s
+
+  (** Compute base URL from host+port *)
+  let base_url ?(use_tls = false) ~host ~port () : string =
+    let protocol =
+      if use_tls then
+        "https"
+      else
+        "http"
+    in
+    spf "%s://%s:%d/" protocol host port
 end
 
 open! Common
@@ -50,10 +64,8 @@ module type S = sig
   val call :
     ?encoding:[ `JSON | `BINARY ] ->
     ?prefix:string option ->
-    ?use_tls:bool ->
     ?headers:headers ->
-    host:string ->
-    port:int ->
+    base_url:string ->
     client ->
     ( 'req,
       Pbrt_services.Value_mode.unary,
@@ -62,6 +74,10 @@ module type S = sig
     Pbrt_services.Client.rpc ->
     'req ->
     ('res, error) result IO.t
+  (** Make a RPC call.
+      @param base_url
+        replaces host+port+use_tls with a http(s) URL. See {!Common.base_url} to
+        get it from host+port+use_tls. since NEXT_RELEASE. *)
 end
 
 module Make (P : PARAMS) : S with module IO = P.IO and type client = P.client =
@@ -69,8 +85,6 @@ struct
   module IO = P.IO
   open IO
   open! Pbrt_services
-
-  let spf = Printf.sprintf
 
   type client = P.client
 
@@ -87,7 +101,7 @@ struct
     }
 
   let call ?(encoding : [ `JSON | `BINARY ] = `BINARY) ?(prefix = Some "twirp")
-      ?(use_tls = false) ?(headers = []) ~host ~port (client : P.client)
+      ?(headers = []) ~base_url (client : P.client)
       (rpc : ('req, Value_mode.unary, 'res, Value_mode.unary) Client.rpc)
       (req : 'req) : ('res, error) result t =
     (* first, encode query *)
@@ -123,14 +137,8 @@ struct
         | Some p -> spf "%s/" p
       in
 
-      let protocol =
-        if use_tls then
-          "https"
-        else
-          "http"
-      in
-      spf "%s://%s:%d/%s%s/%s" protocol host port prefix
-        qualified_service_path_component rpc.rpc_name
+      spf "%s/%s%s/%s" base_url prefix qualified_service_path_component
+        rpc.rpc_name
     in
 
     let headers = ("content-type", content_type) :: headers in

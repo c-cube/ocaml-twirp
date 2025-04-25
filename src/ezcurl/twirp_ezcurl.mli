@@ -5,10 +5,8 @@ val call :
   ?client:Ezcurl.t ->
   ?encoding:[ `JSON | `BINARY ] ->
   ?prefix:string option ->
-  ?use_tls:bool ->
   ?headers:headers ->
-  host:string ->
-  port:int ->
+  base_url:string ->
   ('req, Value_mode.unary, 'res, Value_mode.unary) Client.rpc ->
   'req ->
   ('res, error) result
@@ -19,10 +17,8 @@ val call_exn :
   ?client:Ezcurl.t ->
   ?encoding:[ `JSON | `BINARY ] ->
   ?prefix:string option ->
-  ?use_tls:bool ->
   ?headers:headers ->
-  host:string ->
-  port:int ->
+  base_url:string ->
   ('req, Value_mode.unary, 'res, Value_mode.unary) Client.rpc ->
   'req ->
   'res

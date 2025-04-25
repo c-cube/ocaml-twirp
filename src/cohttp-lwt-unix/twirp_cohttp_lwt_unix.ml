@@ -31,7 +31,6 @@ module C = Twirp_core.Client.Make (struct
       (fun exn -> return @@ Error (Printexc.to_string exn))
 end)
 
-let call ?encoding ?prefix ?use_tls ?headers ~host ~port rpc req :
-    _ result Lwt.t =
+let call ?encoding ?prefix ?headers ~base_url rpc req : _ result Lwt.t =
   let client = () in
-  C.call ?encoding ?prefix ?use_tls ?headers ~host ~port client rpc req
+  C.call ?encoding ?prefix ?headers ~base_url client rpc req
