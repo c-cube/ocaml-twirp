@@ -143,6 +143,8 @@ struct
 
     let headers = ("content-type", content_type) :: headers in
 
+    Log.debug (fun k ->
+        k "issuing HTTP POST on %s body-size=%d" url (String.length req_data));
     let* res = P.http_post client ~url ~body:req_data ~headers () in
 
     match res with
