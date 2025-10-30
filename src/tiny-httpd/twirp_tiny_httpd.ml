@@ -32,7 +32,7 @@ let return_error (err : Error_codes.t) (msg : string option) : H.Response.t =
     | None -> Error_codes.to_descr err
   in
   let code, http_code = Error_codes.to_msg_and_code err in
-  let err = Error.default_error ~code ~msg () in
+  let err = Error.make_error ~code ~msg () in
   let json_body : string =
     Error.encode_json_error err |> Yojson.Basic.to_string
   in
@@ -43,19 +43,19 @@ let return_error (err : Error_codes.t) (msg : string option) : H.Response.t =
 let handle_rpc (rpc : handler) (req : string H.Request.t) : H.Response.t =
   try
     let (Handler
-          {
-            rpc =
-              {
-                name = _;
-                req_mode;
-                res_mode;
-                encode_json_res;
-                encode_pb_res;
-                decode_json_req;
-                decode_pb_req;
-              };
-            f;
-          }) =
+           {
+             rpc =
+               {
+                 name = _;
+                 req_mode;
+                 res_mode;
+                 encode_json_res;
+                 encode_pb_res;
+                 decode_json_req;
+                 decode_pb_req;
+               };
+             f;
+           }) =
       rpc
     in
 

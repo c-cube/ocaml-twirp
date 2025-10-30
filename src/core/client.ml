@@ -89,16 +89,12 @@ struct
   type client = P.client
 
   let decode_error exn : error =
-    {
-      Error.code = "decoding error";
-      msg = spf "decoding response failed with: %s" (Printexc.to_string exn);
-    }
+    Error.make_error ~code:"decoding error" ()
+      ~msg:(spf "decoding response failed with: %s" (Printexc.to_string exn))
 
   let unknown_error msg : error =
-    {
-      Error.code = "unknown";
-      msg = spf "call failed with unknown reason: %s" msg;
-    }
+    Error.make_error ~code:"unknown" ()
+      ~msg:(spf "call failed with unknown reason: %s" msg)
 
   let call ?(encoding : [ `JSON | `BINARY ] = `BINARY) ?(prefix = Some "twirp")
       ?(headers = []) ~base_url (client : P.client)
@@ -183,15 +179,15 @@ struct
             List.find_all (fun (_, c, _) -> c = http_code) Error_codes.all
           with
           | [ (code, _, doc) ] ->
-            {
-              code = Error_codes.to_msg_and_code code |> fst;
-              msg = spf "%s\nHTTP code %d, raw message: %s" doc http_code body;
-            }
+            Error.make_error
+              ~code:(Error_codes.to_msg_and_code code |> fst)
+              ()
+              ~msg:(spf "%s\nHTTP code %d, raw message: %s" doc http_code body)
           | _ ->
-            {
-              code = Error_codes.Malformed |> Error_codes.to_msg_and_code |> fst;
-              msg = spf "Unknown error\nraw message: %s" body;
-            }
+            Error.make_error
+              ~code:(Error_codes.Malformed |> Error_codes.to_msg_and_code |> fst)
+              ~msg:(spf "Unknown error\nraw message: %s" body)
+              ()
         )
       in
       return @@ Error res
